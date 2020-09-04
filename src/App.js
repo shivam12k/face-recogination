@@ -13,10 +13,11 @@ import Particles from 'react-particles-js';
 
 
 
-const ParticlesOptions = {
+const ParticlesOptions = 
+{
   "particles": {
     "number": {
-      "value": 100,
+      "value": 80,
       "density": {
         "enable": true,
         "value_area": 550
@@ -60,13 +61,13 @@ const ParticlesOptions = {
         "sync": false
       }
     },
-    "line_linked": {
-      "enable": true,
-      "distance": 150,
-      "color": "#ffffff",
-      "opacity": 0.4,
-      "width": 1
-    },
+    // "line_linked": {
+    //   "enable": true,
+    //   "distance": 150,
+    //   "color": "#ffffff",
+    //   "opacity": 0.4,
+    //   "width": 1
+    // },
     "move": {
       "enable": true,
       "speed": 6,
@@ -102,13 +103,7 @@ const ParticlesOptions = {
           "opacity": 1
         }
       },
-      "bubble": {
-        "distance": 400,
-        "size": 40,
-        "duration": 2,
-        "opacity": 8,
-        "speed": 3
-      },
+     
       "repulse": {
         "distance": 200,
         "duration": 0.4
@@ -138,17 +133,34 @@ class App extends React.Component {
       image: '',
       box: {},
       route: 'signin',
-      IsSignedIn: 'false'
+      IsSignedIn: 'false',
+      users: {
+        id: '',
+        name: '',
+        email: '',
+        entries: 0,
+        joined: ''
+      }
 
     }
 
   }
 
-  componentDidMount(){
-    fetch('/')
-    .then(response=> response.json())
-    .then(data=> console.log(data))
+  loaduser = (data) => {
+    this.setState({
+      users:
+      {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        entries: data.entries,
+        joined: data.joined
+      }
+    })
+
   }
+
+
   calculateFaceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
     const image = document.getElementById('inputImage');
@@ -225,7 +237,7 @@ class App extends React.Component {
           </div> : (
             this.state.route === 'signin' ?
               <SignIn onroutechange={this.onroutechange} /> :
-              <Register onroutechange={this.onroutechange} />
+              <Register loaduser={(data)=>this.loaduser(data)} onroutechange={this.onroutechange} />
 
           )
 
